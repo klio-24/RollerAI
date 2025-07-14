@@ -11,7 +11,7 @@ export default function HomePage() { // This is the homepage stuff
     setStatus('Submitting...');
 
     try { // here we have a try/catch clause
-      const res = await fetch('https://vt6hi5a1th.execute-api.eu-west-2.amazonaws.com/generate', { // sends HTTP request to URL
+      const res = await fetch('https://vt6hi5a1th.execute-api.eu-west-2.amazonaws.com/default/generate', { // sends HTTP request to URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // tells server JSON data is being sent
