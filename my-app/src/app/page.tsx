@@ -20,7 +20,7 @@ export default function HomePage() { // This is the homepage stuff
       });
 
       const data = await res.json(); // reads server's response
-      setStatus(`Job ID: ${data.job_id}`);  // gives user an job ID
+      setStatus(`Job ID: ${data.job_id}`);  // gives user the Job ID assigned by the backend
     } catch (err) { // catch block
       setStatus('Error sending prompt');
       console.error(err);
