@@ -20,14 +20,14 @@ export default function HomePage() { // This is the homepage stuff
       });
 
       const data = await res.json(); // reads server's response
-      setStatus(`Task ID: ${data.task_id}`);  // gives user an job ID
+      setStatus(`Job ID: ${data.job_id}`);  // gives user an job ID
     } catch (err) { // catch block
       setStatus('Error sending prompt');
       console.error(err);
     }
   };
 
-  return ( // the actual funcitonal component
+  return ( // the actual functional components (textbox/button)
     <div style={{ padding: '2rem' }}>
       <h1>Generate Image</h1>
       <form onSubmit={handleSubmit}>
