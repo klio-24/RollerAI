@@ -32,7 +32,7 @@ async def generate(request: Request): # initiates promptrequest object to handle
     return {"job_id": job_id}  
 
 @app.get('/status')
-def get_status(job_id: str): # FastAPI automatically knows to make job_id = JobID
+def get_status(job_id: str): 
 
     status = r.hget(job_id, "status")
     s3_url = r.hget(job_id, "s3_url")

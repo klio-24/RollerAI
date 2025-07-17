@@ -25,8 +25,9 @@ export default function HomePage() { // This is the homepage stuff
       });
 
       const data = await res.json(); // reads server's response
-      setStatus(`Job ID: ${data.job_id}`);  // gives user the Job ID assigned by the backend
+
       setJobID(data.job_id)
+      setStatus(`Job ID: ${jobID}`);  // gives user the Job ID assigned by the backend
     } catch (err) { // catch block
       setStatus('Error sending prompt');
       console.error(err);
@@ -37,8 +38,9 @@ export default function HomePage() { // This is the homepage stuff
 
   useEffect(() => {
 
-
     if (!jobID) return; // If no job has been submitted, do nothing 
+
+    console.log('Polling started for jobID:', jobID);
     setStatus('Image is being created...')
     const interval = setInterval(async () => { // this piece of code runs every two seconds, its a weird structure of code to get used to but it's the best way to do it
       try {
