@@ -41,7 +41,7 @@ export default function HomePage() { // This is the homepage stuff
 
     const interval = setInterval(async () => { // this piece of code runs every two seconds, its a weird structure of code to get used to but it's the best way to do it
       try {
-        const res = await fetch(`https://your-api.com/status?job_id=${jobID}`); // makes a GET request, with jobID as the query parameter
+        const res = await fetch(`https://vt6hi5a1th.execute-api.eu-west-2.amazonaws.com/status?job_id=${jobID}`); // makes a GET request, with jobID as the query parameter
         const data = await res.json();
 
         if (data.status === 'done') {
