@@ -7,7 +7,7 @@ from rq import Queue
 app = FastAPI()
 
 r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True) # generic redis startup line (redis server running on localhost, default comm port is 6379)
-q = Queue(connection=r)  # Connects RQ queue to Redis
+# q = Queue(connection=r)  # Connects RQ queue to Redis
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,7 +31,7 @@ async def generate(request: Request): # initiates promptrequest object to handle
         "s3_url": ""
     })
 
-    q.enqueue(generate_image, job_id, prompt)
+    # q.enqueue(generate_image, job_id, prompt)
 
     return {"job_id": job_id}  
 
