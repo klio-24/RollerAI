@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import redis
 import uuid
 from rq import Queue
-from redis_vm.runpod_worker import generate_image
 
 app = FastAPI()
 
