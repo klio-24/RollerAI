@@ -46,11 +46,14 @@ export default function HomePage() { // This is the homepage stuff
     setStatus('Image is being created...')
     const interval = setInterval(async () => { // this piece of code runs every two seconds, its a weird structure of code to get used to but it's the best way to do it
       try {
+        console.log("before await fetch")
         const res = await fetch(`https://vt6hi5a1th.execute-api.eu-west-2.amazonaws.com/status?job_id=${jobID}`); // makes a GET request, with jobID as the query parameter
+        console.log("after await fetch")
         console.log("Fetch response:", res);
         const data = await res.json();
         console.log("Status result:", data.status);
         if (data.status === 'complete') {
+          console.log("inside if datastatus equals complete now")
           setImageUrl(data.s3_url);
           setStatus('Image ready!');
           clearInterval(interval);
