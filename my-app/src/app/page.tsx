@@ -44,6 +44,8 @@ export default function HomePage() { // This is the homepage stuff
 
     console.log('Polling started for jobID:', jobID);
     setStatus('Image is being created...')
+
+
     const interval = setInterval(async () => { // this piece of code runs every two seconds, its a weird structure of code to get used to but it's the best way to do it
       try {
         console.log("before await fetch")
@@ -57,6 +59,9 @@ export default function HomePage() { // This is the homepage stuff
           setImageUrl(data.s3_url);
           setStatus('Image ready!');
           clearInterval(interval);
+        }
+        else{
+          console.log("else statement")
         }
       } catch (err) {
         console.error('Error polling job status', err); // good to have console error logs implemented
