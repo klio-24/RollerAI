@@ -33,7 +33,7 @@ async def generate(request: Request): # initiates promptrequest object to handle
         "s3_url": ""
     })
 
-    q.enqueue('autoscaler.generate_image_rq', job_id, prompt) # first parameter is the name of the function the worker executes, the other parameters are variables needed
+    q.enqueue('runpod_worker.generate_image_rq', job_id, prompt) # first parameter is the name of the function the worker executes, the other parameters are variables needed
 
     return {"job_id": job_id}  
 
