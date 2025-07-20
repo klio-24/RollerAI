@@ -3,11 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 import redis
 import uuid
 from rq import Queue
+from runpod_worker import generate_image_rq
 
 app = FastAPI()
 
 r = redis.Redis(host='localhost', port=6379, db=0, password="redis123", decode_responses=True) # generic redis startup line (redis server running on localhost, default comm port is 6379)
 q = Queue(connection=r)  # Connects RQ queue to Redis
+
+q.empty()
 
 app.add_middleware(
     CORSMiddleware,

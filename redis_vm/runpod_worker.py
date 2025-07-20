@@ -18,7 +18,6 @@ pipe = StableDiffusionXLPipeline.from_pretrained(
 s3 = boto3.client("s3")  
 
 def generate_image_rq(job_id: str, prompt: str):
-    r.hset(job_id, "status", "generating")
     image = pipe(prompt).images[0]
     buffer = BytesIO()
     image.save(buffer, format="PNG")
