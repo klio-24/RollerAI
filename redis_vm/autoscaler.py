@@ -15,7 +15,7 @@ runpod.api_key = RUNPOD_API_KEY
 pod1_id = "a6u1ltvio5g9z1"
 pod2_id = "tljfsbaf4nqnv9"
 
-r = redis.Redis(host='localhost', port=6379, password="redis123", db=0)
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 UPPER_THRESHOLD = 7
 LOWER_THRESHOLD = 3
