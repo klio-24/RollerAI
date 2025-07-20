@@ -1,7 +1,11 @@
 from diffusers import StableDiffusionXLPipeline
 import torch
 import boto3
+import redis
 from io import BytesIO # this allows straight upload using a buffer instead of saving (saves space overall)
+from rq import Worker, Queue, Connection
+
+r = redis.Redis(host="18.132.136.177", port=6379, db=0, decode_responses=True)
 
 pipe = StableDiffusionXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",  # This downloads SDXL
@@ -10,19 +14,26 @@ pipe = StableDiffusionXLPipeline.from_pretrained(
     use_safetensors=True
 ).to("cuda")
 
-prompt = "a futuristic city skyline at night, high detail, cinematic"
-image = pipe(prompt).images[0]
+s3 = boto3.client("s3")  
 
-buffer = BytesIO()
-image.save(buffer, format="PNG")
-buffer.seek(0) # resets pointer of buffer back to start so upload_file reads the buffer correctly
+def generate_image_rq(job_id: str, prompt: str):
+    r.hset(job_id, "status", "generating")
+    image = pipe(prompt).images[0]
+    buffer = BytesIO()
+    image.save(buffer, format="PNG")
+    buffer.seek(0) # resets pointer of buffer back to start so upload_file reads the buffer correctly
 
+    key = f"{job_id}.png"
+    s3.upload_fileobj(buffer, bucket_name, key)
+    s3_url = f"https://rollerai-generated-images.s3.amazonaws.com/{key}"
 
-s3 = boto3.client("s3")
-bucket_name = "rollerai-generated-images"            
+    r.hset(job_id, mapping={
+        "status": "complete",
+        "s3_url": s3_url
+    })
 
-key = "output.png"
-s3.upload_fileobj(buffer, bucket_name, key)
-
-
-
+if __name__ == "__main__": # ensures code only runs if this script is run directly
+    listen = ['default'] # listen to the default Redis Queue
+    with Connection(r):
+        worker = Worker([Queue('default')]) # creates Worker constructor
+        worker.work() # starts the work loop which makes the pod a worker on the queue, connecting to redis
