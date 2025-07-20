@@ -74,7 +74,7 @@ useEffect(() => {
   const interval = setInterval(() => {
     console.log("interval tick");
     poll(); // properly call the async function
-  }, 2000);
+  }, 5000);
 
   return () => clearInterval(interval); // cleanup on unmount or jobID change
 }, [jobID]);
