@@ -16,8 +16,10 @@ pipe = StableDiffusionXLPipeline.from_pretrained(
 ).to("cuda")
 
 s3 = boto3.client("s3")  
+bucket_name = "rollerai-generated-images"
 
 def generate_image_rq(job_id: str, prompt: str):
+    global pipe
     image = pipe(prompt).images[0]
     buffer = BytesIO()
     image.save(buffer, format="PNG")
@@ -31,6 +33,8 @@ def generate_image_rq(job_id: str, prompt: str):
         "status": "complete",
         "s3_url": s3_url
     })
+
+    return 
 
 if __name__ == "__main__": # ensures code only runs if this script is run directly
     queue = Queue('default', connection = r)
