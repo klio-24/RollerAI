@@ -29,9 +29,10 @@ export default function HomePage() { // This is the homepage stuff
       setJobID(data.job_id)
       console.log("Received job ID from server:", data.job_id);
       setStatus(`Job ID: ${data.job_id}`);  // gives user the Job ID assigned by the backend 
+    console.log("jobID after set:", data.job_id);
       // WE STILL use data.job_id as setJobID is asynchronous
     } catch (err) { // catch block
-      setStatus('Error sending prompt');
+      setStatus("Error sending prompt");
       console.error(err);
     }
   };
@@ -45,7 +46,6 @@ export default function HomePage() { // This is the homepage stuff
     console.log('Polling started for jobID:', jobID);
     setStatus('Image is being created...')
 
-
     const interval = setInterval(async () => { // this piece of code runs every two seconds, its a weird structure of code to get used to but it's the best way to do it
       try {
         console.log("before await fetch")
@@ -54,7 +54,7 @@ export default function HomePage() { // This is the homepage stuff
         console.log("Fetch response:", res);
         const data = await res.json();
         console.log("Status result:", data.status);
-        if (data.status === 'complete') {
+        if (data.status === "complete") {
           console.log("inside if datastatus equals complete now")
           setImageUrl(data.s3_url);
           setStatus('Image ready!');
