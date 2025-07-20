@@ -6,7 +6,7 @@ from rq import Queue
 
 app = FastAPI()
 
-r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True) # generic redis startup line (redis server running on localhost, default comm port is 6379)
+r = redis.Redis(host='localhost', port=6379, db=0, password="redis123", decode_responses=True) # generic redis startup line (redis server running on localhost, default comm port is 6379)
 q = Queue(connection=r)  # Connects RQ queue to Redis
 
 app.add_middleware(

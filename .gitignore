@@ -2,3 +2,5 @@ rollerai_key.pem
 credits_db_login.txt
 runpod_key.txt
 runpod_aws_upload_key.txt
+
+redis_password.txt

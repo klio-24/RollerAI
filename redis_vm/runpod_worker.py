@@ -5,7 +5,7 @@ import redis
 from io import BytesIO # this allows straight upload using a buffer instead of saving (saves space overall)
 from rq import Worker, Queue, Connection
 
-r = redis.Redis(host="18.132.136.177", port=6379, db=0, decode_responses=True)
+r = redis.Redis(host="18.132.136.177", port=6379, db=0, password="redis123", decode_responses=True)
 
 pipe = StableDiffusionXLPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",  # This downloads SDXL
