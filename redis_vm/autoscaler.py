@@ -5,8 +5,8 @@ import redis
 
 from runpod.api.ctl_commands import resume_pod, stop_pod, get_pod
 
-base_dir = os.path.dirname(__file__)
-key_path = os.path.join(base_dir, "runpod_key.txt")
+home_dir = os.path.expanduser("~")
+key_path = os.path.join(home_dir, "runpodkey.txt")
 with open(key_path, "r") as f:
     RUNPOD_API_KEY = f.read().strip()
 
