@@ -32,7 +32,11 @@ def generate_image_rq(job_id: str, prompt: str):
         "s3_url": s3_url
     })
 
-    return
+    return {
+        "job_id": job_id,
+        "status": "complete",
+        "s3_url": s3_url
+    }
 
 if __name__ == "__main__": # ensures code only runs if this script is run directly
     queue = Queue('default', connection = r)
