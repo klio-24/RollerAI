@@ -39,38 +39,44 @@ export default function HomePage() { // This is the homepage stuff
 
   // After we've done the initial POST, we then wait for a response for the URL
 
-  useEffect(() => {
+useEffect(() => {
+  if (!jobID) return; // If no job has been submitted, do nothing 
 
-    if (!jobID) return; // If no job has been submitted, do nothing 
+  console.log('Polling started for jobID:', jobID);
+  setStatus('Image is being created...');
 
-    console.log('Polling started for jobID:', jobID);
-    setStatus('Image is being created...')
+  // Wrap async logic inside a named function
+  const poll = async () => {
+    try {
+      console.log("before await fetch");
+      const res = await fetch(`https://vt6hi5a1th.execute-api.eu-west-2.amazonaws.com/status?job_id=${jobID}`);
+      console.log("after await fetch");
+      console.log("Fetch response:", res);
+      
+      const data = await res.json();
+      console.log("Status result:", data.status);
 
-    const interval = setInterval(async () => { // this piece of code runs every two seconds, its a weird structure of code to get used to but it's the best way to do it
-      try {
-        console.log("before await fetch")
-        const res = await fetch(`https://vt6hi5a1th.execute-api.eu-west-2.amazonaws.com/status?job_id=${jobID}`); // makes a GET request, with jobID as the query parameter
-        console.log("after await fetch")
-        console.log("Fetch response:", res);
-        const data = await res.json();
-        console.log("Status result:", data.status);
-        if (data.status === "complete") {
-          console.log("inside if datastatus equals complete now")
-          setImageUrl(data.s3_url);
-          setStatus('Image ready!');
-          clearInterval(interval);
-        }
-        else{
-          console.log("else statement")
-        }
-      } catch (err) {
-        console.error('Error polling job status', err); // good to have console error logs implemented
+      if (data.status == "complete") {
+        console.log("inside if datastatus equals complete now");
+        setImageUrl(data.s3_url);
+        setStatus('Image ready!');
+        clearInterval(interval);
+      } else {
+        console.log("else statement");
       }
-    }, 2000); // poll every 2 seconds
+    } catch (err) {
+      console.error('Error polling job status', err);
+    }
+  };
 
-    return () => clearInterval(interval); // cleanup on unmount
-  }, [jobID]); // this links to the useEffect hook, which triggers this block of code when jobID has a value i.e. the POST is successful
+  // Call the poll function on an interval
+  const interval = setInterval(() => {
+    console.log("interval tick");
+    poll(); // properly call the async function
+  }, 2000);
 
+  return () => clearInterval(interval); // cleanup on unmount or jobID change
+}, [jobID]);
   return ( // the actual functional components (textbox/button)
     <div style={{ padding: '2rem' }}>
       <h1>Generate Image</h1>
