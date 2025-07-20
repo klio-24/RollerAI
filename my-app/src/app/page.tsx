@@ -59,6 +59,7 @@ useEffect(() => {
       if (data.status == "complete") {
         console.log("inside if datastatus equals complete now");
         setImageUrl(data.s3_url);
+        console.log("imageUrl state after set:", imageUrl);
         setStatus('Image ready!');
         clearInterval(interval);
       } else {
