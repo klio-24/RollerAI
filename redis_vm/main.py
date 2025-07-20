@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import redis
 import uuid
 from rq import Queue
-from runpod_worker import generate_image_rq
 
 app = FastAPI()
 
@@ -34,7 +33,7 @@ async def generate(request: Request): # initiates promptrequest object to handle
         "s3_url": ""
     })
 
-    q.enqueue(generate_image_rq, job_id, prompt) # first parameter is the name of the function the worker executes, the other parameters are variables needed
+    q.enqueue('generate_image_rq', job_id, prompt) # first parameter is the name of the function the worker executes, the other parameters are variables needed
 
     return {"job_id": job_id}  
 
