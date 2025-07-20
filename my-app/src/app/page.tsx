@@ -48,7 +48,7 @@ export default function HomePage() { // This is the homepage stuff
         const res = await fetch(`https://vt6hi5a1th.execute-api.eu-west-2.amazonaws.com/status?job_id=${jobID}`); // makes a GET request, with jobID as the query parameter
         const data = await res.json();
 
-        if (data.status === 'done') {
+        if (data.status === 'complete') {
           setImageUrl(data.s3_url);
           setStatus('Image ready!');
           clearInterval(interval);
