@@ -3,7 +3,8 @@ import torch
 import boto3
 import redis
 from io import BytesIO # this allows straight upload using a buffer instead of saving (saves space overall)
-from rq import Worker, Queue, Connection
+from redis import Redis
+from rq import Worker,Queue
 
 r = redis.Redis(host="18.132.136.177", port=6379, db=0, password="redis123", decode_responses=True)
 
@@ -33,7 +34,6 @@ def generate_image_rq(job_id: str, prompt: str):
     })
 
 if __name__ == "__main__": # ensures code only runs if this script is run directly
-    listen = ['default'] # listen to the default Redis Queue
-    with Connection(r):
-        worker = Worker([Queue('default')]) # creates Worker constructor
-        worker.work() # starts the work loop which makes the pod a worker on the queue, connecting to redis
+    queue = Queue('default', connection = r)
+    worker = Worker(queues = [queue],connection = r)
+    worker.work() # starts the work loop which makes the pod a worker on the queue, connecting to redis
