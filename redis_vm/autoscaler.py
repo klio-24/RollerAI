@@ -10,10 +10,10 @@ key_path = os.path.join(home_dir, "runpodkey.txt")
 with open(key_path, "r") as f:
     RUNPOD_API_KEY = f.read().strip()
 
-runpod.api_key = RUNPOD_API_KEY
+runpod.api_key = RUNPOD_API_KEY 
 
-pod1_id = "a6u1ltvio5g9z1"
-pod2_id = "tljfsbaf4nqnv9"
+pod1_id = "95grroo0u0gydp"
+pod2_id = "0roqcxw1i9d2wp"
 
 r = redis.Redis(host='localhost', port=6379, db=0)
 
