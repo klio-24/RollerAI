@@ -13,7 +13,7 @@ with open(key_path, "r") as f:
 runpod.api_key = RUNPOD_API_KEY 
 
 pod1_id = "k7lm6thxq3kf8e"
-pod2_id = "0roqcxw1i9d2wp"
+pod2_id = "0hfsvjy0rf2u9g"
 
 r = redis.Redis(host='localhost', port=6379, db=0)
 
