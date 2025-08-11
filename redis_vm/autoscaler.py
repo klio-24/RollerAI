@@ -24,7 +24,7 @@ CHECK_INTERVAL = 1
 while True:
 
 
-    queue_length = r.llen('default') 
+    queue_length = r.llen('rq:queue:default') 
     print(queue_length)
     if queue_length < LOWER_THRESHOLD and get_pod(pod2_id)['desiredStatus'] == 'RUNNING':
         stop_pod(pod2_id)
