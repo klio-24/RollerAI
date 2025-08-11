@@ -18,7 +18,7 @@ s3 = boto3.client("s3")
 bucket_name = "rollerai-generated-images"
 
 def generate_image_rq(job_id: str, prompt: str):
-    image = pipe(prompt).images[0]
+    image = pipe(prompt, num_inference_steps=100).images[0]
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     buffer.seek(0) # resets pointer of buffer back to start so upload_file reads the buffer correctly
