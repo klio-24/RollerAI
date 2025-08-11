@@ -2,6 +2,7 @@ from diffusers import StableDiffusionPipeline
 import torch
 import boto3
 import redis
+import time
 from io import BytesIO # this allows straight upload using a buffer instead of saving (saves space overall)
 from redis import Redis
 from rq import Worker,Queue,SimpleWorker
@@ -19,6 +20,7 @@ bucket_name = "rollerai-generated-images"
 
 def generate_image_rq(job_id: str, prompt: str):
     image = pipe(prompt, num_inference_steps=100).images[0]
+    time.sleep(10)  # wait 10 seconds
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     buffer.seek(0) # resets pointer of buffer back to start so upload_file reads the buffer correctly
