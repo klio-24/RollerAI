@@ -19,12 +19,13 @@ r = redis.Redis(host='localhost', port=6379, db=0)
 
 UPPER_THRESHOLD = 7
 LOWER_THRESHOLD = 3
-CHECK_INTERVAL = 5 
+CHECK_INTERVAL = 1 
 
 while True:
 
+
     queue_length = r.llen('default') 
-    
+    print(queue_length)
     if queue_length < LOWER_THRESHOLD and get_pod(pod2_id)['desiredStatus'] == 'RUNNING':
         stop_pod(pod2_id)
 
