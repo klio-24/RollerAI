@@ -16,7 +16,7 @@ Due to the VM/pod architecture, running costs means the website is not always up
 
 
 
-
+```
 +---------------------------------------+
 |              Frontend VM              |
 |         --------------------          |
@@ -37,11 +37,11 @@ Due to the VM/pod architecture, running costs means the website is not always up
 +------------+      |  |     Pod 2     |  |
                     |  +---------------+  |
                     +---------------------+
+```
 
 
 
-
-                        
+```                       
                           +======+
         ----------------->|  S3  |<-----------------
         |                 +======+                 | 
@@ -62,6 +62,7 @@ Due to the VM/pod architecture, running costs means the website is not always up
                     +---------------+
                     |    Backend    |
                     +---------------+
+```
 
 Although the project has achieved its aims, there is still room to introduce more features and technologies to increase flexiblity and usefulness:
 - Allow the user to choose from multiple stable diffusion models
