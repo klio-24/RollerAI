@@ -1,26 +1,15 @@
 # RollerAI
 
+This goal of this project was to create a website which allows users to create AI-generated images based on a text prompt. The cloud-based architecture was designed to be low-cost and scalable through a combination of virtual machines (as opposed to microservices) and job queue with a set of autoscaling worker pods.
 
-This goal of this project is to create a website which allows users to create AI-generated images based on a text prompt. The cloud-based architecture is designed to be low-cost and scalable
+## System Overview
 
-Redis queue: The jobs are are queued in a Redis message queue acting as a job queue. The jobs themselves are a Redis hash, with a random Job ID assigned as the key and multiple values assigned to each key (status of job, text prompt, image storage URL).
-
-
-The project did not utilise full-scale CI/CD systems during development, however at an early stage of development the frontend and backend EC2 instances were configured so that on restart they pulled the latest changes from the repository and automatically built and deployed their respective applications
-
-The auto-scaling custom Python script works on the principle of hysterisis (similar to a central heating controller), whereby it activates more pods if the queue exceeds a certain length, but does not shutdown the spare pod until the queue is back to a manageable length. This prevents excessive activation and deactivation of the spare pod.
-
-Due to the VM/pod architecture, running costs means the website is not always up, however a demo can be seen below.
-
-![Demo](./demo.gif)
-
-
+Below is the system diagram for this project.
 
 ```
 +---------------------------------------+
 |              Frontend VM              |
-|         --------------------          |
-|           Firebase Auth SDK      (EC2)|
+|                                  (EC2)|
 +---------------------------------------+
      ^                        |   ^
      |                        v   |
@@ -39,7 +28,15 @@ Due to the VM/pod architecture, running costs means the website is not always up
                     +---------------------+
 ```
 
+For the frontend NextJS is used, with FastAPI for the backend in conjunction with AWS API Gateway. The generated images are passed from RunPod (a cloud GPU platform) to S3, with the frontend polling S3 until the image is generated
 
+The jobs are are queued in a Redis message queue acting as a job queue. The jobs themselves are a Redis hash, with a random Job ID assigned as the key and multiple values assigned to each key (status of job, text prompt, image storage URL). This allows multiple requests to be handled simultaneously with a FIFO approach. Images are generated using the Stable Diffusion 1.5 model.
+
+Two processing pods are used to take advantage of on-demand pricing: Pod 1 is always on, with Pod 2 activating via the Autoscaler when high demand is detected.
+
+## Autoscaler
+
+In order to handle increases in requests, a custom autoscaler runs as a background service on the backend VM. Below shows a system diagram of how all the pieces interact: The autoscaler constantly monitors the length of the Redis queue and uses a hysterisis approach (preventing excessive activation and deactivation of the second pod) and the Runpod API to turn on and off the second pod. 
 
 ```                       
                           +======+
@@ -47,7 +44,7 @@ Due to the VM/pod architecture, running costs means the website is not always up
         |                 +======+                 | 
         |                                          |
 +================+                        +================+   
-|     POD 1      |   +================+   |     POD 1      |
+|     POD 1      |   +================+   |     POD 2      |
 |----------------|<--|   Autoscaler   |-->|----------------|
 |    worker.py   |   +================+   |    worker.py   |   
 +================+           ^            +================+
@@ -64,8 +61,16 @@ Due to the VM/pod architecture, running costs means the website is not always up
                     +---------------+
 ```
 
+This approach highlighted the importance of technologies such as Kubernetes KEDA, which would more efficiently handle workload balancing and scaling for a larger amount of pods, including the ability to retry failed tasks.
+
+## Conclusion 
+
+Due to the VM/pod architecture, running costs means the website is not always up, however a demo can be seen below with the queue system being demonstrated.
+
+![Demo](./demo.gif)
+
 Although the project has achieved its aims, there is still room to introduce more features and technologies to increase flexiblity and usefulness:
-- Allow the user to choose from multiple stable diffusion models
+- Allow the user to choose from multiple AI image generation models
 - Implement real payment options through a Stripe API, credits system, and user/authorisation system
-- Create a subpage for users to access previous images generated
+- Create a subpage for users to access their previously images generated
 
